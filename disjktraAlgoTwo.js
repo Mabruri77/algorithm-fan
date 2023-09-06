@@ -49,33 +49,33 @@ class PriorityQueue {
 }
 
 function dijsktraAlgo(graph, start, end) {
-  let nodes = new PriorityQueue()
+  let vertexes = new PriorityQueue()
   let result = []
-  for (let i = 0; i < graph.length; i++) {
-    result[i] = -1
+  for (let vertex = 0; vertex < graph.length; vertex++) {
+    result[vertex] = -1
   }
   result[start] = 0
   let seen = {}
-  nodes.insert([start, 0])
+  vertexes.insert([start, 0])
   seen[start] = true
-  while (nodes.data.length) {
-    let current = nodes.remove()
-    let node = current[0]
+  while (vertexes.data.length) {
+    let current = vertexes.remove()
+    let vertex = current[0]
     let weight = current[1]
-    if (node == end) {
+    if (vertex == end) {
       break
     } else {
-      for (let neighbour of graph[node]) {
-        let nodeNeighbour = neighbour[0]
+      for (let neighbour of graph[vertex]) {
+        let vertexNeighbour = neighbour[0]
         let weightNeighbour = neighbour[1]
         let countWeight = weightNeighbour + weight
-        if (!seen[nodeNeighbour]) {
-          seen[nodeNeighbour] = true
-          result[nodeNeighbour] = countWeight
-          nodes.insert([nodeNeighbour, countWeight])
-        } else if (result[nodeNeighbour] > countWeight) {
-          result[nodeNeighbour] = countWeight
-          nodes.insert([nodeNeighbour, countWeight])
+        if (!seen[vertexNeighbour]) {
+          seen[vertexNeighbour] = true
+          result[vertexNeighbour] = countWeight
+          vertexes.insert([vertexNeighbour, countWeight])
+        } else if (result[vertexNeighbour] > countWeight) {
+          result[vertexNeighbour] = countWeight
+          vertexes.insert([vertexNeighbour, countWeight])
         }
       }
     }

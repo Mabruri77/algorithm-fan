@@ -1,6 +1,6 @@
 class Node {
   constructor(val, weight) {
-    this.value = val
+    this.vertex = val
     this.weight = weight
   }
 }
@@ -78,37 +78,37 @@ class WeightedGraph {
   }
   dijkstraAlgo(start, end) {
     let result = []
-    let nodes = new PriorityQueue()
+    let vertexes = new PriorityQueue()
     let distances = {}
     let previous = {}
     let seen = {}
     previous["A"] = null
     seen["A"] = true
-    nodes.push(new Node(start, 0))
+    vertexes.push(new Node(start, 0))
     distances["A"] = 0
-    while (nodes.data.length) {
-      let current = nodes.pop()
-      if (current.value == end) {
-        let node = end
-        while (node) {
-          result.push(node)
-          node = previous[node]
+    while (vertexes.data.length) {
+      let current = vertexes.pop()
+      if (current.vertex == end) {
+        let vertex = end
+        while (vertex) {
+          result.push(vertex)
+          vertex = previous[vertex]
         }
         break
       } else {
-        for (let neighbour of this.data[current.value]) {
+        for (let neighbour of this.data[current.vertex]) {
           let newWeight = current.weight + neighbour.weight
-          if (!seen[neighbour.value]) {
-            seen[neighbour.value] = true
-            distances[neighbour.value] = newWeight
-            previous[neighbour.value] = current.value
+          if (!seen[neighbour.vertex]) {
+            seen[neighbour.vertex] = true
+            distances[neighbour.vertex] = newWeight
+            previous[neighbour.vertex] = current.vertex
             neighbour.weight = newWeight
-            nodes.push(neighbour)
-          } else if (distances[neighbour.value] > newWeight) {
+            vertexes.push(neighbour)
+          } else if (distances[neighbour.vertex] > newWeight) {
             neighbour.weight = newWeight
-            nodes.push(neighbour)
-            distances[neighbour.value] = newWeight
-            previous[neighbour.value] = current.value
+            vertexes.push(neighbour)
+            distances[neighbour.vertex] = newWeight
+            previous[neighbour.vertex] = current.vertex
           }
         }
       }
