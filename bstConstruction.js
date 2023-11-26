@@ -5,129 +5,96 @@ class Node {
     this.right = null
   }
 }
+
 class BinarySearchTree {
   constructor() {
     this.root = null
   }
+
   insert(val) {
     let newNode = new Node(val)
-    if (!this.root) {
-      this.root = newNode
-    } else {
-      let current = this.root
-      while (true) {
-        if (val >= current.value && current.right) {
-          current = current.right
-        } else if (val >= current.value) {
-          current.right = newNode
-          break
-        } else if (current.left) {
-          current = current.left
-        } else {
-          current.left = newNode
-          break
-        }
-      }
+    if (!this.root) return (this.root = newNode)
+    let current = this.root
+    while (true) {
+      if (val < current.value && current.left) current = current.left
+      else if (val < current.value) return (current.left = newNode)
+      else if (current.right) current = current.right
+      else return (current.right = newNode)
     }
   }
-
   search(val) {
     let current = this.root
-    let result = null
     while (current) {
-      if (current.value == val) {
-        result = current
-        break
-      } else if (val >= current.value) {
-        current = current.right
-      } else {
-        current = current.left
-      }
+      if (val > current.value) current = current.right
+      else if (val < current.value) current = current.left
+      else return console.log(current.value)
     }
-    return current
+    return console.log(
+      "The Value is Not Found \n<======================================================================>"
+    )
   }
-  remove(val) {
-    let root = this.root
-    let { current, parent, direction } = this.searchingForRemove(val)
+  delete(val) {
+    let { parent, current, direction } = this.searchForDelete(val)
+    if (!current) return console.log("the value for deletion not exist")
+
     if (current.left && current.right) {
-      smallestRightMostAndMove(current)
-    } else if (current.left) {
-      console.log("left")
-      parent[direction] = current.left
+      let { smallestNode, smallestParent, smallestDirection } = this.findRightSmallest(current)
+      current.value = smallestNode.value
+      if (smallestNode.right) {
+        smallestParent[smallestDirection] = smallestNode.right
+      } else {
+        smallestParent[smallestDirection] = null
+      }
     } else if (current.right) {
-      console.log(" right")
       parent[direction] = current.right
     } else {
-      parent[direction] = null
-    }
-
-    function smallestRightMostAndMove(current) {
-      let parentTarget = current
-      let direction = null
-      let target = current.right
-      if (target.left) {
-        while (true) {
-          if (target.left) {
-            direction = "left"
-            parentTarget = target
-            target = target.left
-          } else if (target.right) {
-            direction = "right"
-            parentTarget = target
-            target = target.right
-          } else break
-        }
-      }
-      current.value = target.value
-      if (target.right) {
-        if (!direction) {
-          current.right = target.right
-        } else {
-          parentTarget[direction] = target.right
-        }
-      } else {
-        if (!direction) {
-          parentTarget["right"] = null
-        } else {
-          parentTarget[direction] = null
-        }
-      }
+      parent[direction] = current.left
     }
   }
 
-  searchingForRemove(val) {
-    let current = this.root
-    let parent = null
+  searchForDelete(val) {
+    let parent = this.root
+    let current = parent
     let direction = null
     while (current) {
-      if (current.value == val) {
-        break
-      } else if (val >= current.value) {
+      if (val < current.value) {
         parent = current
-        direction = "right"
-        current = current.right
-      } else {
-        parent = current
-        direction = "left"
         current = current.left
-      }
+        direction = "left"
+      } else if (val > current.value) {
+        parent = current
+        current = current.right
+        direction = "right"
+      } else if (val == current.value) break
+      else return { parent: null, current: null }
     }
-    return { current, parent, direction }
+    return { parent, current, direction }
+  }
+
+  findRightSmallest(node) {
+    let parent = node
+    let start = parent.right
+    let direction = "right"
+    while (start.left) {
+      parent = start
+      start = start.left
+      direction = "left"
+    }
+    return { smallestNode: start, smallestParent: parent, smallestDirection: direction }
   }
 }
 
-const bst = new BinarySearchTree()
-bst.insert(10)
-bst.insert(5)
-bst.insert(15)
-bst.insert(2)
-bst.insert(5)
-bst.insert(1)
-bst.insert(13)
-bst.insert(22)
-bst.insert(12)
-bst.insert(14)
-bst.insert(33)
-bst.insert(23)
-bst.remove(15)
-console.log(bst.root)
+const tree = new BinarySearchTree()
+tree.insert(10)
+tree.insert(5)
+tree.insert(15)
+tree.insert(2)
+tree.insert(5)
+tree.insert(1)
+tree.insert(13)
+tree.insert(22)
+tree.insert(12)
+tree.insert(14)
+tree.delete(5)
+tree.delete(2)
+console.log(tree.root)
